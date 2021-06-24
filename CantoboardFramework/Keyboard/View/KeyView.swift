@@ -130,7 +130,8 @@ class KeyView: HighlightableButton {
         }
         
         switch keyCap {
-        case .character, .characterWithConditioanlPopup: titleEdgeInsets = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
+        case .character(let c), .characterWithConditioanlPopup(let c):
+            titleEdgeInsets = UIEdgeInsets(top: c.first?.needsAdjustment ?? false ? -4 : 0, left: 0, bottom: 0, right: 0)
         default: titleEdgeInsets = UIEdgeInsets.zero
         }
         

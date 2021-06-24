@@ -56,30 +56,30 @@ class KeyboardView: UIView, InputView {
     
     private let numbersHalfKeyCapRows: [[[KeyCap]]] = [
         [["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]],
-        [["-", "/", ":", ";", "(", ")", "$", "\"", "「", "」"]],
-        [[.keyboardType(.symbolic)], [".", ",", "、", "&", "?", "!", "‘"], [.backspace]],
-        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], ["@", .returnKey(.default)]]
+        [["-", "/", ":", ";", "(", ")", "$", "\"", "｢", "｣"]],
+        [[.keyboardType(.symbolic)], [".", ",", "､", "^_^", "?", "!", "'"], [.backspace]],
+        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], ["…", .returnKey(.default)]]
     ]
     
     private let symbolsHalfKeyCapRows: [[[KeyCap]]] = [
         [["[", "]", "{", "}", "#", "%", "^", "*", "+", "="]],
-        [["_", "—", "\\", "|", "~", "<", ">", "《", "》", "•"]],
-        [[.keyboardType(.numeric)], [".", ",", "、", "^_^", "?", "!", "‘"], [.backspace]],
-        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], [.returnKey(.default)]]
+        [["_", "\\", "|", "~", "<", ">", "«", "»", "&", "•"]],
+        [[.keyboardType(.numeric)], [".", ",", "､", "^_^", "?", "!", "'"], [.backspace]],
+        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], ["@", .returnKey(.default)]]
     ]
     
     private let numbersFullKeyCapRows: [[[KeyCap]]] = [
         [["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]],
-        [["－", "／", "：", "；", "（", "）", "＄", "＂", "「", "」"]],
-        [[.keyboardType(.symbolic)], ["。", "，", "、", "＆", "？", "！", "＇"], [.backspace]],
-        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], ["＠", .returnKey(.default)]]
+        [["—", "／", "：", "；", "（", "）", "＄", "＂", "「", "」"]],
+        [[.keyboardType(.symbolic)], ["。", "，", "、", "^_^", "？", "！", "＇"], [.backspace]],
+        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], ["⋯", .returnKey(.default)]]
     ]
     
     private let symbolsFullKeyCapRows: [[[KeyCap]]] = [
         [["［", "］", "｛", "｝", "＃", "％", "＾", "＊", "＋", "＝"]],
-        [["＿", "—", "＼", "｜", "～", "〈", "〉", "《", "》", "•"]],
-        [[.keyboardType(.numeric)], ["。", "，", "、", "^_^", "？", "！", "‘"], [.backspace]],
-        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], [.returnKey(.default)]]
+        [["＿", "＼", "｜", "～", "〈", "〉", "《", "》", "＆", "·"]],
+        [[.keyboardType(.numeric)], ["。", "，", "、", "^_^", "？", "！", "＇"], [.backspace]],
+        [[.keyboardType(.alphabetic(.lowercased)), .nextKeyboard], [.space(.space)], ["＠", .returnKey(.default)]]
     ]
     
     private weak var newLineKey: KeyView?
@@ -279,34 +279,27 @@ class KeyboardView: UIView, InputView {
             // let rimeSchema = state.rimeSchema
             keyCaps = keyCaps.map { $0.map {
                 switch $0 {
-                case .character(let c) where state.activeSchema.isCangjieFamily && c.first?.isEnglishLetter ?? false && state.inputMode != .english:
-                    return .cangjie(c)
-                case .character("F"), .character("G"), .character("H"),
-                     .character("C"), .character("V"), .character("B"),
-                     .character("f"), .character("g"), .character("h"),
-                     .character("c"), .character("v"), .character("b"):
-                    switch state.keyboardContextualType {
-                    case .rime, .url(true):
-                        if case .character(let c) = $0,
-                           state.activeSchema == .jyutping && Settings.cached.toneInputMode == .longPress || state.activeSchema == .yale {
-                            // Show tone keys.
-                            return .characterWithConditioanlPopup(c)
-                        } else {
-                            return $0
+                case .character(let c) where state.inputMode != .english:
+                    if state.activeSchema.isCangjieFamily && c.first?.isEnglishLetter ?? false { return .cangjie(c) }
+                    switch c.lowercased() {
+                    case "f", "g", "h", "c", "v", "b":
+                        switch state.keyboardContextualType {
+                        case .rime, .url(true):
+                            switch state.activeSchema {
+                            case .jyutping where Settings.cached.toneInputMode == .longPress, .yale: return .characterWithConditioanlPopup(c)
+                            default: ()
+                            }
+                        default: ()
                         }
-                    default:
-                        return $0
+                    case "r" where state.activeSchema.isCantonese: return .characterWithConditioanlPopup(c)
+                    default: ()
                     }
-                case "R", "r":
-                    if state.activeSchema.isCantonese, case .character(let c) = $0 {
-                        return .characterWithConditioanlPopup(c)
-                    }
-                    return $0
                 case .contexualSymbols: return .contexualSymbols(state.keyboardContextualType)
                 case .returnKey: return .returnKey(state.returnKeyType)
                 case .space: return .space(state.spaceKeyMode)
-                default: return $0
+                default: ()
                 }
+                return $0
             } }
             
             // TODO Hide shift button if we are not in jyutping mode.

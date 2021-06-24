@@ -52,11 +52,16 @@ extension Character {
     }
     
     var isChineseChar: Bool {
-        !isASCII /* TODO if char is in CJK range */
+        !isASCII && self != "､" && self != "｢" && self != "｣" && self != "«" && self != "»" && self != "•" && self != "…"
+        /* TODO if char is in CJK range */
     }
     
     var isVowel: Bool {
         return self == "a" || self == "e" || self == "i" || self == "o" || self == "u" ||
             self == "A" || self == "E" || self == "I" || self == "O" || self == "U"
+    }
+    
+    var needsAdjustment: Bool {
+        !isNumber && !isChineseChar && !isUppercase
     }
 }

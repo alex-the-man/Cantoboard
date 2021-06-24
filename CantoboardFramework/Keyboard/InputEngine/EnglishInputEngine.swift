@@ -151,13 +151,10 @@ class EnglishInputEngine: InputEngine {
     }
     
     private func updateCandidates() {
-        var text = inputTextBuffer.text, textLowercased = text.lowercased()
-        guard !text.isEmpty && text.count < 25 && textLowercased != "m" else {
+        let text = inputTextBuffer.text, textLowercased = text.lowercased()
+        guard !text.isEmpty && text.count < 25 else {
             isWord = false
             candidates = [text]
-            if text == "m" {
-                candidates.append("M")
-            }
             prefectCandidatesStartIndex = 0
             worstCandidatesStartIndex = 0
             return
@@ -171,13 +168,13 @@ class EnglishInputEngine: InputEngine {
         let textChecker = Self.textChecker
         
         let isInAppleDictionary = textChecker.rangeOfMisspelledWord(in: combined, range: nsWordRange, startingAt: 0, wrap: false, language: Self.language).location == NSNotFound
-        let englishDictionaryWordsSet = lookupInDictionary(wordLowercased: textLowercased)
+        let englishDictionaryWordsSet = lookupInDictionary(wordLowercased: textLowercased).filter({ $0.count > 1 })
         var candidateSets = Set<String>()
         
         isWord = (!englishDictionaryWordsSet.isEmpty || text.allSatisfy({ $0.isUppercase }))
         
         candidates = []
-        var worstCandidates:[String] = []
+        var worstCandidates: [String] = []
         prefectCandidatesStartIndex = 0
         worstCandidatesStartIndex = 0
         
@@ -191,11 +188,13 @@ class EnglishInputEngine: InputEngine {
             autoCompleteCandidates = []
         }
         
-        if text == "i" { text = "I" }
-        
-        if text.allSatisfy({ $0.isUppercase }) {
+        if text.allSatisfy({ $0.isUppercase }) && text.count > 1 {
             candidateSets.insert(text)
             candidates.append(text)
+            prefectCandidatesStartIndex += 1
+        } else if text == "i" {
+            candidateSets.insert("I")
+            candidates.append("I")
             prefectCandidatesStartIndex += 1
         }
         

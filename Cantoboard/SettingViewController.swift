@@ -8,7 +8,7 @@ import UIKit
 
 import CantoboardFramework
 
-class SettingViewController: UITableViewController {
+class SettingViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak private var charFormControl: UISegmentedControl!
     @IBOutlet weak private var enableMixedModeControl: UISwitch!
     @IBOutlet weak private var autoCapControl: UISwitch!
@@ -22,6 +22,7 @@ class SettingViewController: UITableViewController {
     @IBOutlet weak private var showRomanizationControl: UISwitch!
     @IBOutlet weak private var audioFeedbackControl: UISwitch!
     @IBOutlet weak private var hapticFeedbackControl: UISwitch!
+    @IBOutlet weak private var inputTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +42,7 @@ class SettingViewController: UITableViewController {
         showRomanizationControl.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
         audioFeedbackControl.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
         hapticFeedbackControl.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
+        inputTextField.delegate = self
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -97,12 +99,21 @@ class SettingViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    @IBAction func openAppSetting(_ sender: Any) {
-        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let orgValue = super.tableView(tableView, titleForHeaderInSection: section)
+        switch section {
+        case 0: return orgValue
+        default: return isKeyboardEnabled() ? orgValue : nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        let orgValue = super.tableView(tableView, titleForFooterInSection: section)
         switch section {
         case 0: return orgValue
         default: return isKeyboardEnabled() ? orgValue : nil
@@ -114,6 +125,14 @@ class SettingViewController: UITableViewController {
         switch section {
         case 0: return orgValue
         default: return isKeyboardEnabled() ? orgValue : 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        switch indexPath.section {
+        case 0: UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+        default: ()
         }
     }
     

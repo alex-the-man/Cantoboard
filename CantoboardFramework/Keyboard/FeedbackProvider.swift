@@ -21,7 +21,7 @@ class FeedbackProvider {
             AudioServicesPlaySystemSound(Self.clickPress)
         case .backspace, .deleteWord:
             AudioServicesPlaySystemSound(Self.deletePress)
-        case .keyboardType(_), .space, .newLine:
+        case .keyboardType(_), .space, .newLine, .shift(_), .nextKeyboard:
             AudioServicesPlaySystemSound(Self.modifierPress)
         default: ()
         }

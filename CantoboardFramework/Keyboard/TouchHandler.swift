@@ -70,14 +70,11 @@ class TouchHandler {
         key.keyTouchBegan(touch)
         
         hasTakenAction = false
+        FeedbackProvider.play(keyboardAction: key.selectedAction)
         switch key.selectedAction {
         case .backspace:
             inputMode = .backspacing
-            FeedbackProvider.play(keyboardAction: key.selectedAction)
-        case .keyboardType(.emojis), .character, .rime:
-            FeedbackProvider.play(keyboardAction: key.selectedAction)
         case .keyboardType:
-            FeedbackProvider.play(keyboardAction: key.selectedAction)
             callKeyHandler(key.selectedAction)
         case .nextKeyboard:
             guard let event = event else { return }
@@ -92,8 +89,6 @@ class TouchHandler {
                 // Double tapping shift.
                 callKeyHandler(.keyboardType(.alphabetic(.capsLocked)))
             }
-        case .space, .newLine:
-            FeedbackProvider.play(keyboardAction: key.selectedAction)
         default: () // Ignore other keys on key down.
         }
         

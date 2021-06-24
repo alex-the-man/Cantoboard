@@ -25,9 +25,9 @@ import UIKit
  but require manual handling in a custom action handler.
 */
 enum SpaceKeyMode: String {
-    case space = "space"
-    case select = "select"
-    case nextPage = "next page"
+    case space = "空格"
+    case select = "選字"
+    case nextPage = "下一頁"
 }
 
 enum KeyCap: Equatable, ExpressibleByStringLiteral {
@@ -41,7 +41,7 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
     stroke(String),
     emoji(String),
     keyboardType(KeyboardType),
-    returnKey(UIReturnKeyType),
+    returnKey(UIReturnKeyType?),
     nextKeyboard,
     space(SpaceKeyMode),
     shift(_ state: KeyboardShiftState),
@@ -89,25 +89,25 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
     
     var buttonFont: UIFont {
         switch self {
-        case .rime, "^_^": return UIFont.preferredFont(forTextStyle: buttonFontStyle).withSize(16)
-        default: return .preferredFont(forTextStyle: buttonFontStyle)
+        case .keyboardType(.symbolic), .returnKey(.emergencyCall): return UIFont.systemFont(ofSize: 12)
+        case .rime, "^_^", .keyboardType, .returnKey, .space, .contexualSymbols(.rime): return UIFont.systemFont(ofSize: 16)
+        case .character(let c), .characterWithConditioanlPopup(let c):
+            if let c = c.first {
+                if c.isEnglishLetter { return UIFont(name: "CustomFont", size: 24)! }
+                if c.isASCII { return UIFont(name: "CustomFont", size: 22)! }
+            }
+        default: ()
         }
+        return UIFont.systemFont(ofSize: 22)
     }
     
     var popupFont: UIFont {
         switch self {
-        case .reverseLookup, .rime(.delimiter), .rime(.sym): return UIFont.preferredFont(forTextStyle: buttonFontStyle).withSize(24)
-        case .rime, "⋯⋯", "^_^", ".com", ".net", ".org", ".edu", .exportFile, .exit:
-            return UIFont.preferredFont(forTextStyle: buttonFontStyle).withSize(16)
-        default: return UIFont.preferredFont(forTextStyle: buttonFontStyle).withSize(30)
-        }
-    }
-    
-    var buttonFontStyle: UIFont.TextStyle {
-        switch self {
-        case .character, .characterWithConditioanlPopup, .cangjie, .emoji, .contexualSymbols: return .title2
-        case .keyboardType(.emojis): return .title1
-        default: return .body
+        case .reverseLookup, .rime(.delimiter), .rime(.sym): return UIFont.systemFont(ofSize: 24)
+        case .exportFile, .exit: return UIFont.systemFont(ofSize: 12)
+        case .rime, "……", "⋯⋯", "——", "^_^", ".com", ".net", ".org", ".edu": return UIFont.systemFont(ofSize: 16)
+        case .character(let c) where c.first?.isASCII ?? false: return UIFont(name: "CustomFont", size: 30)!
+        default: return UIFont.systemFont(ofSize: 30)
         }
     }
     
@@ -115,7 +115,8 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         switch self {
         case .character, .characterWithConditioanlPopup, .cangjie, .stroke, .space, .contexualSymbols: return ButtonColor.inputKeyBackgroundColor
         case .shift(.uppercased), .shift(.capsLocked): return ButtonColor.shiftKeyHighlightedBackgroundColor
-        case .returnKey(.go), .returnKey(.search): return UIColor.systemBlue
+        case .returnKey(nil), .returnKey(.default), .returnKey(.next), .returnKey(.continue): return ButtonColor.systemKeyBackgroundColor
+        case .returnKey(_): return UIColor.systemBlue
         default: return ButtonColor.systemKeyBackgroundColor
         }
     }
@@ -137,7 +138,8 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
     
     var buttonFgColor: UIColor {
         switch self {
-        case .returnKey(.go), .returnKey(.search): return .white
+        case .returnKey(nil), .returnKey(.default), .returnKey(.next), .returnKey(.continue): return ButtonColor.keyForegroundColor
+        case .returnKey(_): return UIColor.white
         case .shift(.uppercased), .shift(.capsLocked): return ButtonColor.shiftKeyHighlightedForegroundColor
         default: return ButtonColor.keyForegroundColor
         }
@@ -163,11 +165,17 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
     var buttonText: String? {
         switch self {
         case .characterWithConditioanlPopup(let text): return text
-        case .returnKey(.go): return "go"
-        case .returnKey(.next): return "next"
-        case .returnKey(.send): return "send"
-        case .returnKey(.search), .returnKey(.google): return "search"
-        case .returnKey: return "return"
+        case .returnKey(nil): return "確認"
+        case .returnKey(.default): return "換行"
+        case .returnKey(.go): return "前往"
+        case .returnKey(.search), .returnKey(.google), .returnKey(.yahoo): return "搜尋"
+        case .returnKey(.join): return "加入"
+        case .returnKey(.next): return "下一個"
+        case .returnKey(.route): return "路線"
+        case .returnKey(.send): return "傳送"
+        case .returnKey(.done): return "完成"
+        case .returnKey(.emergencyCall): return "緊急電話"
+        case .returnKey(.continue): return "繼續"
         case .space(let label): return label.rawValue
         case .keyboardType(.numeric): return "123"
         case .keyboardType(.symbolic): return "#+="
@@ -178,25 +186,18 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case .rime(.tone4): return "陽平"
         case .rime(.tone5): return "陽上"
         case .rime(.tone6): return "陽去"
-        case .rime(.delimiter): return "分"
+        case .rime(.delimiter): return "隔"
         case .rime(.sym): return "符"
         case .reverseLookup(let schema): return schema.signChar
         case .changeSchema(let schema): return schema.shortName
         case .switchToEnglishMode: return "英文"
         case .contexualSymbols(.chinese): return "，"
         case .contexualSymbols(.english): return ","
-        case .contexualSymbols(.rime): return "分"
+        case .contexualSymbols(.rime): return "隔"
         case .contexualSymbols(.url): return "."
-        case "（": return "("
-        case "）": return ")"
-        case "「": return "「　"
-        case "」": return "  」"
-        case "《": return "《　"
-        case "》": return "  》"
-        case "［": return "["
-        case "］": return "]"
-        case "｛": return "{"
-        case "｝": return "}"
+        // case "^_^": return "^͟^"
+        case .character(let text) where "（［｛〈《「".contains(text): return text + "　"
+        case .character(let text) where "）］｝〉》」".contains(text): return "  " + text
         case .character(let text): return text
         case .cangjie(let c):
             guard let asciiCode = c.lowercased().first?.asciiValue else { return nil }
@@ -211,8 +212,9 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
             case "z": return "乙"
             default: return nil
             }
-        case .exportFile(let namePrefix, _): return namePrefix.capitalized
-        case .exit: return "Exit"
+        case .exportFile("user", _): return "用戶檔"
+        case .exportFile("logs", _): return "紀錄檔"
+        case .exit: return "退出"
         default: return nil
         }
     }
@@ -248,18 +250,18 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case .contexualSymbols(.chinese), .contexualSymbols(.english): return "符"
         case .contexualSymbols(.url): return "/"
         case .space: return "Cantoboard"
-        default: return barHint
+        default: return nil
         }
     }
     
     var barHint: String? {
         switch self {
-        case "，", "。", "？", "！",
-             "－", "／", "：", "；", "（", "）", "＠", "、", "⋯", "⋯⋯", "＆",
+        case "，", "。", "？", "！", "—", "——", "＆", "．",
+             "－", "／", "：", "；", "（", "）", "＠", "、", "⋯", "⋯⋯",
              "１", "２", "３", "４", "５", "６", "７", "８", "９", "０",
              "［", "］", "｛", "｝", "＃", "％", "＾", "＊", "＋", "＝",
-             "＿", "＼", "｜", "～", "〈", "＜", "＞", "〉",
-             "￠", "＄", "€", "￡", "￥", "￦", "₽", "＂", "＇": return "全"
+             "＿", "＼", "｜", "～", "〈", "〉", "《", "》", "＜", "＞",
+             "￠", "＄", "￡", "￥", "￦", "＂", "＇", "「", "」": return "全"
         default: return nil
         }
     }
@@ -334,7 +336,7 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case "9": return ["九", "9", "玖", "９", "⑨", "⑼", "⒐", "❾", "㊈", "㈨"]
         case "0": return ["0", "０", "零", "十", "拾", "⓪", "°"]
         // 123 2nd row
-        case "-": return ["-", "－", "–", "—", "•"]
+        case "-": return ["-", "－", "—", "——", "–", "•"]
         case "/": return ["/", "／", "\\"]
         case ":": return [":", "："]
         case ";": return [";", "；"]
@@ -342,17 +344,17 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case ")": return [")", "）"]
         case "$": return ["¢", "$", "€", "£", "¥", "₩", "₽"]
         case "\"": return ["\"", "＂", "”", "“", "„", "»", "«"]
-        case "「": return ["「", "『", "“", "‘"]
-        case "」": return ["」", "』", "”", "’"]
+        case "｢": return ["｢", "「", "『", "“", "‘"]
+        case "｣": return ["｣", "」", "』", "”", "’"]
         // 123 3rd row
-        case ".": return [".", "。", "…", "⋯", "⋯⋯"]
-        case ",": return [", ", "，"]
-        case "&": return ["＆", "&", "§"]
+        case ".": return [".", "。", "．"]
+        case ",": return [",", "，"]
+        case "､": return ["､", "、"]
         case "?": return ["?", "？", "¿"]
         case "!": return ["!", "！", "¡"]
-        case "‘": return ["'", "＇", "’", "‘", "`"]
+        case "'": return ["'", "＇", "’", "‘", "`"]
         // 123 4rd row
-        case "@": return ["@", "＠"]
+        case "…": return ["…", "……", "⋯", "⋯⋯"]
         // #+= 1st row
         case "[": return ["[", "［", "【", "〔"]
         case "]": return ["]", "］", "】", "〕"]
@@ -371,7 +373,12 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case "~": return ["~", "～"]
         case "<": return ["<", "〈", "＜"]
         case ">": return [">", "〉", "＞"]
-        case "•": return ["•", "·", "°"]
+        case "«": return ["«", "《"]
+        case "»": return ["»", "》"]
+        case "&": return ["＆", "&", "§"]
+        case "•": return ["•", "·", "．", "°"]
+        // #+= 4rd row
+        case "@": return ["@", "＠"]
         // 123 1st row full width
         case "１": return ["１", "一", "壹", "1", "①", "⑴", "⒈", "❶", "㊀", "㈠"]
         case "２": return ["貳", "２", "二", "2", "②", "⑵", "⒉", "❷", "㊁", "㈡"]
@@ -384,7 +391,7 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case "９": return ["九", "９", "玖", "9", "⑨", "⑼", "⒐", "❾", "㊈", "㈨"]
         case "０": return ["０", "0", "零", "十", "拾", "⓪", "°"]
         // 123 2nd row full width
-        case "－": return ["－", "-", "–", "—", "•"]
+        case "—": return ["—", "——", "－", "-", "–", "•"]
         case "／": return ["／", "/", "\\"]
         case "：": return ["：", ":"]
         case "；": return ["；", ";"]
@@ -392,15 +399,17 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case "）": return ["）", ")"]
         case "＄": return ["￠", "$", "＄", "€", "￡", "￥", "￦", "₽"]
         case "＂": return ["＂", "\"", "”", "“", "c", "»", "«"]
+        case "「": return ["「", "｢", "『", "“", "‘"]
+        case "」": return ["」", "｣", "』", "”", "’"]
         // 123 3rd row full width
-        case "。": return ["。", ".","…", "⋯", "⋯⋯"]
-        case "，": return ["，", ", "]
-        case "＆": return ["&", "＆", "§"]
+        case "。": return ["。", ".", "．"]
+        case "，": return ["，", ","]
+        case "、": return ["､", "、"]
         case "？": return ["？", "?", "¿"]
         case "！": return ["！", "!", "¡"]
         case "＇": return ["＇", "'", "’", "‘", "｀"]
         // 123 4rd row full width
-        case "＠": return ["＠", "@"]
+        case "⋯": return ["⋯", "⋯⋯", "…", "……"]
         // #+= 1st row full width
         case "［": return ["［", "[", "【", "〔"]
         case "］": return ["］", "]", "】", "〕"]
@@ -419,6 +428,12 @@ enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case "～": return ["～", "~"]
         case "〈": return ["〈", "<", "＜"]
         case "〉": return ["〉", ">", "＞"]
+        case "《": return ["《", "«"]
+        case "》": return ["》", "»"]
+        case "＆": return ["&", "＆", "§"]
+        case "·": return ["·", "．", "•", "°"]
+        // #+= 4rd row full width
+        case "＠": return ["＠", "@"]
         default: return [self]
         }
     }
@@ -448,10 +463,10 @@ class ButtonColor {
     static let inputKeyBackgroundColor = UIColor(named: "inputKeyBackgroundColor", in: FrameworkBundle, compatibleWith: nil)!
     static let keyForegroundColor = UIColor(named: "keyForegroundColor", in: FrameworkBundle, compatibleWith: nil)!
     static let keyHintColor = UIColor(named: "keyHintColor", in: FrameworkBundle, compatibleWith: nil)!
-    static let popupBackgroundColor = UIColor(named: "popupBackgroundColor", in: FrameworkBundle, compatibleWith: nil)!
+    static let popupBackgroundColor = UIColor(named: "PopupBackgroundColor", in: FrameworkBundle, compatibleWith: nil)!
     static let keyShadowColor = UIColor(named: "keyShadowColor", in: FrameworkBundle, compatibleWith: nil)!
-    static let shiftKeyHighlightedBackgroundColor = UIColor(named: "shiftKeyHighlightedBackgroundColor", in: FrameworkBundle, compatibleWith: nil)!
-    static let shiftKeyHighlightedForegroundColor = UIColor(named: "shiftKeyHighlightedForegroundColor", in: FrameworkBundle, compatibleWith: nil)!
+    static let shiftKeyHighlightedBackgroundColor = UIColor(named: "ShiftKeyHighlightedBackgroundColor", in: FrameworkBundle, compatibleWith: nil)!
+    static let shiftKeyHighlightedForegroundColor = UIColor(named: "ShiftKeyHighlightedForegroundColor", in: FrameworkBundle, compatibleWith: nil)!
     static let spaceKeyHighlightedBackgroundColor = UIColor(named: "spaceKeyHighlightedBackgroundColor", in: FrameworkBundle, compatibleWith: nil)!
     static let systemHighlightedKeyBackgroundColor = UIColor(named: "systemHighlightedKeyBackgroundColor", in: FrameworkBundle, compatibleWith: nil)!
 }

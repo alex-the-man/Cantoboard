@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		149B3D28268209D500B09F33 /* CustomFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 149B3D27268209D500B09F33 /* CustomFont.ttf */; };
+		149B3D29268209D500B09F33 /* CustomFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 149B3D27268209D500B09F33 /* CustomFont.ttf */; };
+		149B3D2A268209D500B09F33 /* CustomFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 149B3D27268209D500B09F33 /* CustomFont.ttf */; };
+		149B3D2B268209D500B09F33 /* CustomFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 149B3D27268209D500B09F33 /* CustomFont.ttf */; };
+		149B3D2C268209D500B09F33 /* CustomFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 149B3D27268209D500B09F33 /* CustomFont.ttf */; };
 		7913D968266752FC00DB78C2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7913D967266752FC00DB78C2 /* main.swift */; };
 		7917DDA42660A41F00D0010D /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7917DDA32660A41F00D0010D /* GuideViewController.swift */; };
 		7919A78125F3320F0075DD4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7919A78025F3320F0075DD4D /* AppDelegate.swift */; };
@@ -266,6 +271,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		149B3D27268209D500B09F33 /* CustomFont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = CustomFont.ttf; sourceTree = "<group>"; };
 		7913D965266752FC00DB78C2 /* MissingGlyphRemover */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MissingGlyphRemover; sourceTree = BUILT_PRODUCTS_DIR; };
 		7913D967266752FC00DB78C2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7917DDA32660A41F00D0010D /* GuideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
@@ -568,6 +574,7 @@
 				79B9B57525F3496800238E80 /* CantoboardFramework.h */,
 				79B9B57625F3496800238E80 /* Info.plist */,
 				79B9B5E925F34A1200238E80 /* Media.xcassets */,
+				149B3D27268209D500B09F33 /* CustomFont.ttf */,
 				79B9B58A25F34A1200238E80 /* Keyboard */,
 				79B9B58125F34A1200238E80 /* RimeKit */,
 				79515AB72609AF3F00D29A5C /* Utils */,
@@ -1059,6 +1066,7 @@
 			files = (
 				7919A78D25F332100075DD4D /* LaunchScreen.storyboard in Resources */,
 				7919A78A25F332100075DD4D /* Assets.xcassets in Resources */,
+				149B3D28268209D500B09F33 /* CustomFont.ttf in Resources */,
 				799D919D2674646D00AE9DBD /* Settings.bundle in Resources */,
 				7919A78825F3320F0075DD4D /* Main.storyboard in Resources */,
 				79A2D0802661FD0C00F2EB19 /* Guide in Resources */,
@@ -1071,6 +1079,7 @@
 			files = (
 				79D4E23B264251C600857D7D /* EnglishDictSource in Resources */,
 				799F2E5B25F46B0900C53416 /* LaunchScreen.storyboard in Resources */,
+				149B3D2A268209D500B09F33 /* CustomFont.ttf in Resources */,
 				799F2E5825F46B0900C53416 /* Assets.xcassets in Resources */,
 				799F2E5625F46B0800C53416 /* Main.storyboard in Resources */,
 				79D4E244264262D200857D7D /* UnihanSource in Resources */,
@@ -1081,6 +1090,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				149B3D29268209D500B09F33 /* CustomFont.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1090,6 +1100,7 @@
 			files = (
 				79D4E1D42642372600857D7D /* Data in Resources */,
 				79B9B64C25F34A1200238E80 /* Media.xcassets in Resources */,
+				149B3D2B268209D500B09F33 /* CustomFont.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1121,6 +1132,7 @@
 				79B9B6C825F34B2D00238E80 /* ic_symbols.png in Resources */,
 				79B9B6C625F34B2D00238E80 /* ic_smileys_people@3x.png in Resources */,
 				79B9B6C925F34B2D00238E80 /* ic_flags@2x.png in Resources */,
+				149B3D2C268209D500B09F33 /* CustomFont.ttf in Resources */,
 				79B9B6D725F34B2D00238E80 /* ISEmojiList_iOS10.plist in Resources */,
 				79B9B6CC25F34B2D00238E80 /* ic_flags@3x.png in Resources */,
 				79B9B6D925F34B2D00238E80 /* EmojiCollectionView.xib in Resources */,

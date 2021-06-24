@@ -82,15 +82,21 @@ class InputEngineCandidateSource: CandidateSource {
             candidatePaths.append([])
         }
         
+        let rawInputWithoutDigits = inputEngine.englishComposition?.text.lowercased() ?? ""
+        var demotedEnglishCandidateIndices: [Int] = []
+        
         // If input is an English word, insert best English candidates first.
         if !hasPopulatedPrefectEnglishCandidates && isEnglishActive {
             for i in 0..<inputEngine.englishPrefectCandidatesStartIndex {
-                candidatePaths[0].append(CandidatePath(source: .english, index: i))
+                if inputMode == .english || englishCandidates[i].lowercased() != rawInputWithoutDigits.lowercased() {
+                    candidatePaths[0].append(CandidatePath(source: .english, index: i))
+                } else {
+                    demotedEnglishCandidateIndices.append(i)
+                }
             }
             hasPopulatedPrefectEnglishCandidates = true
         }
         
-        let rawInputWithoutDigits = inputEngine.englishComposition?.text.lowercased() ?? ""
         let firstRimeCandidateLength = inputEngine.getRimeCandidate(0)?.count ?? 0
         let firstRimeCode = (inputEngine.getRimeCandidateComment(0) ?? "").lowercased().filter({ !$0.isNumber && $0 != " " })
         let composeTextFirstRimeCodeLCS = rawInputWithoutDigits.longestCommonSubsequence(firstRimeCode)
@@ -123,6 +129,9 @@ class InputEngineCandidateSource: CandidateSource {
         
         // If input is not an English word, insert best English candidates after populating Rime best candidates.
         if !hasPopulatedBestEnglishCandidates && isEnglishActive {
+            for i in demotedEnglishCandidateIndices {
+                candidatePaths[0].append(CandidatePath(source: .english, index: i))
+            }
             for i in inputEngine.englishPrefectCandidatesStartIndex..<inputEngine.englishWorstCandidatesStartIndex {
                 candidatePaths[0].append(CandidatePath(source: .english, index: i))
             }
