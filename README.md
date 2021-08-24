@@ -32,5 +32,5 @@ TestFlight QR code:
 ## FAQ
 
 ## Credits
-librime
-rime-cantonese
+- [librime RIME: Rime Input Method Engine](https://github.com/rime/librime) BSD-3-Clause License
+- [rime-cantonese Rime 粵語拼音方案](https://github.com/rime/rime-cantonese) Open Data Commons Open Database License
