@@ -1,6 +1,9 @@
 # Cantoboard
 iOS 嘅智能廣東話鍵盤 Smart Cantonese Keyboard on iOS
 
+## Demo
+TODO 加入圖片宣傳輸入法
+
 ## 特點
 - Support 多隻輸入法: 粵拼, 耶魯, 速成, 倉頡, 筆劃同埋普通話拼音. 
 - 全部輸入法皆有學習功能, 會記住你打過嘅詞彙. 使用 Rime 輸入引擎. 學習完全離線, 唔會 share 任何個人數據去 cloud.
@@ -12,3 +15,22 @@ iOS 嘅智能廣東話鍵盤 Smart Cantonese Keyboard on iOS
 - 唔使轉輸入法都可以混打中英文. 打英文嘅時候有 auto correct 功能.
 - 中英文輸入皆具智能輸入及糾錯功能. 標點符號會自動根據前文選擇半形/全形.
 - 英文輸入方式模仿 iOS 系統鍵盤. Double tap 空格會輸入句號, 識自動判斷大細楷.
+
+## Download
+[![Get it on App Store](https://user-images.githubusercontent.com/8400790/130535947-be7cf192-77c7-46da-827b-a8b92f9b76ff.png)](https://apps.apple.com/us/app/cantoboard/id1556817074)
+
+App Store QR code:
+
+![Cantoboard on App Store](https://user-images.githubusercontent.com/8400790/130536100-c1374acf-2662-44d2-a83c-13849722670c.png)
+
+[Get Beta build on TestFlight](https://testflight.apple.com/join/zq9YSjuv)
+
+TestFlight QR code:
+
+![Cantoboard Beta on TestFlight](https://user-images.githubusercontent.com/8400790/130536005-86aeacbc-4be9-43fe-ac49-dcf688eb4f40.png)
+
+## FAQ
+
+## Credits
+librime
+rime-cantonese
