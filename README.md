@@ -15,6 +15,7 @@ TODO 加入圖片宣傳輸入法
 - 唔使轉輸入法都可以混打中英文. 打英文嘅時候有 auto correct 功能.
 - 中英文輸入皆具智能輸入及糾錯功能. 標點符號會自動根據前文選擇半形/全形.
 - 英文輸入方式模仿 iOS 系統鍵盤. Double tap 空格會輸入句號, 識自動判斷大細楷.
+- 長按符號鍵會顯示所有全形半形選擇.
 
 ## Download
 [![Get it on App Store](https://user-images.githubusercontent.com/8400790/130535947-be7cf192-77c7-46da-827b-a8b92f9b76ff.png)](https://apps.apple.com/us/app/cantoboard/id1556817074)
