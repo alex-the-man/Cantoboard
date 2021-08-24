@@ -33,7 +33,7 @@ TestFlight QR code:
 ### 輸入法可以 support hardware keyboard 嗎?
 因為 Apple API 唔容許 Keyboard Extension 接收 hardware keyboard 打字嘅events, 係 Apple 開放 API 之前, 唔可能 support hardware keyboard.
 
-詳細細節: 係 Keyboard Extension 入面, iOS 唔會 call 此 [handler](https://developer.apple.com/documentation/gamecontroller/gckeyboardinput/3626180-keychangedhandler)
+詳細細節: 係 Keyboard Extension 入面, iOS 唔會 call 呢個 [handler](https://developer.apple.com/documentation/gamecontroller/gckeyboardinput/3626180-keychangedhandler).
 
 ## Credits
 - [librime RIME: Rime Input Method Engine](https://github.com/rime/librime) BSD-3-Clause License
