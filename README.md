@@ -30,6 +30,7 @@ TestFlight QR code:
 ![Cantoboard Beta on TestFlight](https://user-images.githubusercontent.com/8400790/130536005-86aeacbc-4be9-43fe-ac49-dcf688eb4f40.png)
 
 ## FAQ
+TODO
 
 ## Credits
 - [librime RIME: Rime Input Method Engine](https://github.com/rime/librime) BSD-3-Clause License
