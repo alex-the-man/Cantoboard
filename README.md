@@ -30,7 +30,8 @@ TestFlight QR code:
 ![Cantoboard Beta on TestFlight](https://user-images.githubusercontent.com/8400790/130536005-86aeacbc-4be9-43fe-ac49-dcf688eb4f40.png)
 
 ## FAQ
-TODO
+### 輸入法可以 support hardware keyboard 嗎?
+因為 Apple API 唔容許 Keyboard Extension 接收 hardware keyboard 打字嘅events, 係 Apple 開放 API 之前, 唔可能 support hardware keyboard.
 
 ## Credits
 - [librime RIME: Rime Input Method Engine](https://github.com/rime/librime) BSD-3-Clause License
